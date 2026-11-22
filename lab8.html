@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="Content-Script-Type" content="text/javascript">
+<title>Лабораторна робота №8.</title>
+<script>
+    var canvas, context;
+    var xc, yc, koef;
+    var t = 0;
+
+    window.onload = function() {
+        canvas = document.getElementById("drawingCanvas");
+        context = canvas.getContext("2d");
+        xc = 462;
+        yc = 306;
+        koef = 80;
+        setInterval(draw, 30); 
+    };
+
+
+    function X(x) { return xc + x * koef; }
+    function Y(y) { return yc - y * koef; }
+
+    function axes() {
+        var i;
+        context.beginPath();
+        context.lineWidth = 2;
+        context.strokeStyle = "black";
+        context.moveTo(142, yc);
+        context.lineTo(940, yc);
+        context.lineTo(914, yc - 12);
+        context.moveTo(940, yc);
+        context.lineTo(914, yc + 12);
+        context.moveTo(xc, 566);
+        context.lineTo(xc, 68);
+        context.lineTo(xc - 12, 100);
+        context.moveTo(xc, 68);
+        context.lineTo(xc + 12, 100);
+        context.stroke();
+
+        context.font = "24px Times New Roman";
+        context.fillStyle = "black";
+        context.fillText("X", 945, yc + 36);
+        context.fillText("Y", xc + 20, 79);
+        context.fillText("0", xc - 24, yc + 28);
+        context.font = "22px Times New Roman";
+        for (i = -3; i <= 5; i++) {
+            if (i != 0) {
+                context.beginPath();
+                context.moveTo(X(i), yc - 7);
+                context.lineTo(X(i), yc + 7);
+                context.stroke();
+                context.fillText(i, X(i) - 7, yc - 15);
+            }
+        }
+        for (i = -3; i <= 2; i++) {
+            if (i != 0) {
+                context.beginPath();
+                context.moveTo(xc - 7, Y(i));
+                context.lineTo(xc + 7, Y(i));
+                context.stroke();
+                context.fillText(i, xc - 45, Y(i) + 8);
+            }
+        }
+    }
+
+    function rectangle(x, y, w, h) {
+        context.beginPath();
+        context.rect(X(x), Y(y), w * koef, h * koef);
+        context.fillStyle = "blue";
+        context.fill();
+        context.closePath();
+    }
+
+    function circle(x, y, radius) {
+        context.beginPath();
+        context.arc(X(x), Y(y), radius * koef, 0, 2 * Math.PI);
+        context.fillStyle = "blue";
+        context.fill();
+        context.strokeStyle = "black";
+        context.lineWidth = 1;
+        context.stroke();
+        context.closePath();
+    }
+
+    function diamond(x, y) {
+        context.beginPath();
+        context.moveTo(X(x), Y(y + 1));
+        context.lineTo(X(x + 1), Y(y));
+        context.lineTo(X(x), Y(y - 1));
+        context.lineTo(X(x - 1), Y(y));
+        context.closePath();
+        context.fillStyle = "blue";
+        context.fill();
+    }
+
+    function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        axes();
+
+
+        circle(-2, 1, 1);
+        rectangle(-3, 0, 2, 1);
+        rectangle(0, -1, 1, 1);
+        rectangle(1, -2, 2, 1);
+        rectangle(3, 1, 1, 1);
+        rectangle(4, -1, 1, 1);
+
+
+        circle(1 + 0.2 * Math.sin(t), 1, 1);
+
+
+        context.save();
+        context.translate(X(2.5), Y(1.5));
+        context.rotate(0.25 * Math.sin(t));
+        context.beginPath();
+        context.rect(-koef / 2, -koef / 2, koef, koef);
+        context.fillStyle = "blue";
+        context.fill();
+        context.restore();
+
+
+        context.save();
+        context.translate(X(3), Y(-1 + 0.15 * Math.sin(t)));
+        context.rotate(0.3 * Math.sin(t));
+        context.beginPath();
+        context.moveTo(0, -koef);
+        context.lineTo(koef, 0);
+        context.lineTo(0, koef);
+        context.lineTo(-koef, 0);
+        context.closePath();
+        context.fillStyle = "blue";
+        context.fill();
+        context.restore();
+
+        t += 0.035;
+    }
+</script>
+</head>
+<body>
+<h3>Лабораторна робота №8. Рисування геометричних фігур на Canvas</h3>
+</body>
+</html>
